@@ -1,0 +1,25 @@
+version: '2'
+services:
+  reviewers_mongodb:
+          image: docker.nexus.yamoney.ru/mongo:latest
+          container_name: "reviewers_mongodb"
+          environment:
+            - MONGO_DATA_DIR=/data/db
+            - MONGO_LOG_DIR=/dev/null
+          logging:
+              options:
+                  max-size: "100m"
+                  max-file: "5"
+  reviewers:
+          image: reviewers:latest
+          container_name: "reviewers"
+          depends_on:
+            - reviewers_mongodb
+          links:
+            - reviewers_mongodb
+          ports:
+            - 8098:8080
+          logging:
+              options:
+                  max-size: "100m"
+                  max-file: "5"
