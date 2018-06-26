@@ -7,6 +7,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.toMap
 
 data class TestEntity(val name: String, val surname: String)
 
@@ -16,7 +17,7 @@ fun main(args: Array<String>) {
             get("/") {
                 try {
                     println(call.request.uri)
-                    println(call.request.queryParameters)
+                    println(call.request.queryParameters.toMap())
                     call.respondText { "Hello" }
                 } catch (e: Throwable) {
                     e.printStackTrace()
