@@ -2,9 +2,15 @@ package ru.yamoney.test.app
 
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.features.*
+import io.ktor.features.CallLogging
+import io.ktor.features.Compression
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
-import io.ktor.request.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.request.header
+import io.ktor.request.receiveText
+import io.ktor.response.respond
 import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -15,18 +21,6 @@ data class TestEntity(val name: String, val surname: String)
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, port = 8080) {
-        /*        intercept(ApplicationCallPipeline.Call) {
-                    try {
-                        println(call.request.uri)
-                        println(call.request.queryParameters.toMap())
-                        call.request.headers.forEach { s, list -> println("$s: $list") }
-                        processRequest(call.request)
-                        call.respond(HttpStatusCode.OK)
-                    } catch (e: Throwable) {
-                        e.printStackTrace()
-                        call.respond(HttpStatusCode.BadRequest, e.message ?: e.localizedMessage)
-                    }
-                }*/
         install(DefaultHeaders)
         install(Compression)
         install(CallLogging) {
@@ -43,28 +37,26 @@ fun main(args: Array<String>) {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
                 println(call.receiveText())
+                call.respond(HttpStatusCode.OK)
             }
             get("/hook/{repository}") {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
                 println(call.receiveText())
+                call.respond(HttpStatusCode.OK)
             }
             put("/hook/{repository}") {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
                 println(call.receiveText())
+                call.respond(HttpStatusCode.OK)
             }
             delete("/hook/{repository}") {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
                 println(call.receiveText())
+                call.respond(HttpStatusCode.OK)
             }
         }
     }.start(wait = true)
-}///asdasdasdasd
-
-fun processRequest(request: ApplicationRequest) {
-    println(request.httpMethod)
-    println(request.contentType())
-    println(request.toLogString())
 }
