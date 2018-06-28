@@ -4,9 +4,7 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.gson.gson
-import io.ktor.request.ApplicationRequest
-import io.ktor.request.contentType
-import io.ktor.request.httpMethod
+import io.ktor.request.*
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
@@ -44,6 +42,8 @@ fun main(args: Array<String>) {
         routing {
             post("/hook/{repository}") {
                 println(call.parameters["repository"])
+                println(call.request.header("X-Event-Key"))
+                println(call.receiveText())
             }
         }
     }.start(wait = true)
