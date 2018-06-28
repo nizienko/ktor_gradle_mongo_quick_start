@@ -16,6 +16,7 @@ fun main(args: Array<String>) {
             try {
                 println(call.request.uri)
                 println(call.request.queryParameters.toMap())
+                println(call.request.headers)
                 call.respondText { "Hello" }
             } catch (e: Throwable) {
                 e.printStackTrace()
