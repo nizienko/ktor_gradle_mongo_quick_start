@@ -4,4 +4,4 @@ import org.litote.kmongo.KMongo
 
 val db = KMongo.createClient(
         "reviewers_mongodb"
-).getDatabase("reviewers")
+).getDatabase("reviewers") ?: throw IllegalStateException("Data base is null")

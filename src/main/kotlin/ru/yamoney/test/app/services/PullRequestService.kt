@@ -10,5 +10,6 @@ fun processWebHook(webHook: WebHook) {
     when (webHook.eventKey) {
         "pr:opened" -> db.getCollection<PullRequest>().insertOne(webHook.pullRequest)
         "pr:deleted" -> db.getCollection<PullRequest>().deleteOne(webHook.pullRequest::id eq webHook.pullRequest.id)
+        else -> println(webHook)
     }
 }
