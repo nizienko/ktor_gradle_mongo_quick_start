@@ -5,8 +5,7 @@ import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.request.*
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
@@ -41,6 +40,21 @@ fun main(args: Array<String>) {
         }
         routing {
             post("/hook/{repository}") {
+                println(call.parameters["repository"])
+                println(call.request.header("X-Event-Key"))
+                println(call.receiveText())
+            }
+            get("/hook/{repository}") {
+                println(call.parameters["repository"])
+                println(call.request.header("X-Event-Key"))
+                println(call.receiveText())
+            }
+            put("/hook/{repository}") {
+                println(call.parameters["repository"])
+                println(call.request.header("X-Event-Key"))
+                println(call.receiveText())
+            }
+            delete("/hook/{repository}") {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
                 println(call.receiveText())
