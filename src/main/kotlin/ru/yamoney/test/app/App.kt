@@ -8,6 +8,7 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.HttpStatusCode
+import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
@@ -34,6 +35,7 @@ fun main(args: Array<String>) {
         }
         routing {
             post("/hook/{repository}") {
+                println(call.receiveText())
                 processWebHook(call.receiveJson())
                 call.respond(HttpStatusCode.OK)
             }
