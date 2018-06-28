@@ -11,6 +11,7 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import org.slf4j.event.Level
 import java.text.DateFormat
 
 data class TestEntity(val name: String, val surname: String)
@@ -31,7 +32,9 @@ fun main(args: Array<String>) {
                 }*/
         install(DefaultHeaders)
         install(Compression)
-        install(CallLogging)
+        install(CallLogging) {
+            level = Level.DEBUG
+        }
         install(ContentNegotiation) {
             gson {
                 setDateFormat(DateFormat.LONG)
