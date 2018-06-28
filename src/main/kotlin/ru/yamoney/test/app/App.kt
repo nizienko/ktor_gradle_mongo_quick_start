@@ -16,7 +16,8 @@ fun main(args: Array<String>) {
             try {
                 println(call.request.uri)
                 println(call.request.queryParameters.toMap())
-                println(call.request.headers)
+                call.request.headers.forEach { s, list -> println("$s: $list") }
+
                 call.respondText { "Hello" }
             } catch (e: Throwable) {
                 e.printStackTrace()
