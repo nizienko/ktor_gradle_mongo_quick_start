@@ -1,6 +1,7 @@
 package ru.yamoney.test.app
 
 import com.google.gson.Gson
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -19,7 +20,6 @@ import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
 import java.text.DateFormat
 
-data class WebHook(val eventKey: String)
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, port = 8080) {
@@ -38,12 +38,57 @@ fun main(args: Array<String>) {
             post("/hook/{repository}") {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
-                val json = call.receiveText()
-                val gson = Gson()
-                val hook = gson.fromJson(json, WebHook::class.java)
-                println(hook)
+
+                println(call.receiveJson<WebHook>())
                 call.respond(HttpStatusCode.OK)
             }
         }
     }.start(wait = true)
+}
+
+data class WebHook(
+        val eventKey: String,
+        val actor: Actor,
+        val pullRequest: PullRequest
+)
+
+data class Actor(
+        val name: String,
+        val emailAddress: String,
+        val id: Int
+)
+
+data class PullRequest(
+        val id: Int,
+        val title: String,
+        val state: String,
+        val open: Boolean,
+        val createdDate: Long,
+        val updatedDate: Long,
+        val fromRef: FromRef,
+        val reviewers: List<String>
+)
+
+data class FromRef(
+        val repository: Repository
+)
+
+data class Repository(
+        val slug: String,
+        val id: Int,
+        val name: String,
+        val project: Project
+)
+
+data class Project(
+        val key: String,
+        val id: Int,
+        val name: String,
+        val description: String
+)
+
+val gson = Gson()
+
+suspend inline fun <reified T> ApplicationCall.receiveJson(): T {
+    return gson.fromJson(this.receiveText(), T::class.java)
 }
