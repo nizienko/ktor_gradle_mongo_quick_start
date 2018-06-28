@@ -37,6 +37,7 @@ dependencies {
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile "io.ktor:ktor-gson:$ktor_version"
     compile "org.litote.kmongo:kmongo:3.7.0"
+    compile "ch.qos/logback:logback-classic:1.2.3"
     testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.2.0"
     testRuntime "org.junit.platform:junit-platform-launcher:1.2.0"
