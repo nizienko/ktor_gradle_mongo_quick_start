@@ -1,5 +1,6 @@
 package ru.yamoney.test.app
 
+import com.google.gson.Gson
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -11,13 +12,14 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.request.header
 import io.ktor.request.receiveText
 import io.ktor.response.respond
-import io.ktor.routing.*
+import io.ktor.routing.post
+import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
 import java.text.DateFormat
 
-data class TestEntity(val name: String, val surname: String)
+data class WebHook(val eventKey: String)
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, port = 8080) {
@@ -36,25 +38,10 @@ fun main(args: Array<String>) {
             post("/hook/{repository}") {
                 println(call.parameters["repository"])
                 println(call.request.header("X-Event-Key"))
-                println(call.receiveText())
-                call.respond(HttpStatusCode.OK)
-            }
-            get("/hook/{repository}") {
-                println(call.parameters["repository"])
-                println(call.request.header("X-Event-Key"))
-                println(call.receiveText())
-                call.respond(HttpStatusCode.OK)
-            }
-            put("/hook/{repository}") {
-                println(call.parameters["repository"])
-                println(call.request.header("X-Event-Key"))
-                println(call.receiveText())
-                call.respond(HttpStatusCode.OK)
-            }
-            delete("/hook/{repository}") {
-                println(call.parameters["repository"])
-                println(call.request.header("X-Event-Key"))
-                println(call.receiveText())
+                val json = call.receiveText()
+                val gson = Gson()
+                val hook = gson.fromJson(json, WebHook::class.java)
+                println(hook)
                 call.respond(HttpStatusCode.OK)
             }
         }
