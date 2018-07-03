@@ -40,8 +40,11 @@ fun main(args: Array<String>) {
             }
             get("/callback/{status}") {
                 println(call.parameters["status"])
-                call.respond(HttpStatusCode.OK)
+                call.respond(CallBackResponse("success"))
             }
         }
     }.start(wait = true)
 }
+
+data class CallBackResponse(val status: String)
+
