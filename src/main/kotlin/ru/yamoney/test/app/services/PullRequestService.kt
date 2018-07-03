@@ -23,7 +23,7 @@ fun processWebHook(webHook: WebHook) {
 data class AutorunResponse(val status: String, val message: String)
 
 fun startJob(pullRequest: PullRequest) {
-    val callBackUrl = "http://ugr-integration-tools1.yamoney.ru:8098/callback/${pullRequest.id}"
+    val callBackUrl = "http://ugr-integration-tools1.yamoney.ru:8098/callback/${pullRequest.uId()}"
     println("Starting job for $pullRequest")
     val result = Request.Post("http://jenkins-ot.test.yamoney.ru:8096/jenkinsJob/run")
             .bodyForm(
@@ -37,3 +37,4 @@ fun startJob(pullRequest: PullRequest) {
             .execute().returnContent().asString()
     println(result)
 }
+

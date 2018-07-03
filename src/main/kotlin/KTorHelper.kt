@@ -5,5 +5,7 @@ import io.ktor.request.receiveText
 val gson = Gson()
 
 suspend inline fun <reified T> ApplicationCall.receiveJson(): T {
-    return gson.fromJson(this.receiveText(), T::class.java)
+    val text = this.receiveText()
+    println(text)
+    return gson.fromJson(text, T::class.java)
 }

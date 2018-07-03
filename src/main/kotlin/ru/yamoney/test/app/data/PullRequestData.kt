@@ -12,6 +12,7 @@ data class Actor(
         val id: Int
 )
 
+
 data class PullRequest(
         val id: Int,
         val title: String,
@@ -21,7 +22,9 @@ data class PullRequest(
         val updatedDate: Long,
         val fromRef: FromRef,
         val reviewers: List<String>
-)
+) {
+    fun uId() = "${this.fromRef.repository.name}_${this.id}"
+}
 
 data class FromRef(
         val repository: Repository
