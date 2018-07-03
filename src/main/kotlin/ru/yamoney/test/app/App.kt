@@ -8,8 +8,8 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.HttpStatusCode
-import io.ktor.request.receiveText
 import io.ktor.response.respond
+import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
@@ -35,8 +35,11 @@ fun main(args: Array<String>) {
         }
         routing {
             post("/hook/{repository}") {
-                println(call.receiveText())
                 processWebHook(call.receiveJson())
+                call.respond(HttpStatusCode.OK)
+            }
+            get("/callback/{status}") {
+                println(call.parameters["status"])
                 call.respond(HttpStatusCode.OK)
             }
         }
