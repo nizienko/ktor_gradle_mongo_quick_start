@@ -31,7 +31,7 @@ fun startJob(pullRequest: PullRequest) {
                             .add("folder", "QA")
                             .add("folderUrl", "https://jenkins-dev.yamoney.ru/job/QA/")
                             .add("jobName", "TestJob")
-                            .add("parameters", "branch=testBranch")
+                            .add("parameters", "branch=${pullRequest.fromRef.displayId}")
                             .add("callBackUrl", callBackUrl)
                             .build())
             .execute().returnContent().asString()

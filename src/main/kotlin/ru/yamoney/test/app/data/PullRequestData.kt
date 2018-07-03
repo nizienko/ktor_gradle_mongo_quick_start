@@ -27,7 +27,9 @@ data class PullRequest(
 }
 
 data class FromRef(
-        val repository: Repository
+        val repository: Repository,
+        val id: String,
+        val displayId: String
 )
 
 data class Repository(
