@@ -38,7 +38,8 @@ fun main(args: Array<String>) {
                 processWebHook(call.receiveJson())
                 call.respond(HttpStatusCode.OK)
             }
-            get("/callback/{status}") {
+            get("/callback/{prId}/{status}") {
+                println(call.parameters["prId"])
                 println(call.parameters["status"])
                 call.respond(CallBackResponse("success"))
             }
