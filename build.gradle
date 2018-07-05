@@ -41,6 +41,7 @@ dependencies {
     compile "org.litote.kmongo:kmongo:3.7.0"
     compile "ch.qos.logback:logback-classic:$logback_version"
     compile "com.atlassian.bitbucket.server:bitbucket-api:4.0.0-m27"
+    compile "ru.yamoney.test:user-storage-client:1.7.12-SNAPSHOT"
     testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.2.0"
     testRuntime "org.junit.platform:junit-platform-launcher:1.2.0"

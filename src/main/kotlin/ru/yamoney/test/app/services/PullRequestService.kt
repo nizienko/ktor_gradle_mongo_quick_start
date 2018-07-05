@@ -7,11 +7,13 @@ import org.litote.kmongo.getCollection
 import ru.yamoney.test.app.data.PullRequest
 import ru.yamoney.test.app.data.WebHook
 import ru.yamoney.test.app.db.db
+import ru.yamoney.test.app.sendMessage
 
 
 fun processWebHook(webHook: WebHook) {
     when (webHook.eventKey) {
         "pr:opened" -> {
+            sendMessage("Новый pr от ${webHook.actor.displayName} в ${webHook.pullRequest.fromRef.repository.name}")
             db.getCollection<PullRequest>().insertOne(webHook.pullRequest)
             startJob(webHook.pullRequest)
         }

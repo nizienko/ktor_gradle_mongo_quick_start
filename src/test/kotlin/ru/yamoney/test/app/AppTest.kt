@@ -6,6 +6,5 @@ class AppTest {
 
     @Test
     fun test() {
-        println("Test executed")
     }
 }

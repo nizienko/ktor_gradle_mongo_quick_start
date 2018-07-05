@@ -2,14 +2,8 @@ package ru.yamoney.test.app.data
 
 data class WebHook(
         val eventKey: String,
-        val actor: Actor,
+        val actor: User,
         val pullRequest: PullRequest
-)
-
-data class Actor(
-        val name: String,
-        val emailAddress: String,
-        val id: Int
 )
 
 
