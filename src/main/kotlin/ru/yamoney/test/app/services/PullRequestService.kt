@@ -47,9 +47,9 @@ fun processCallback(callback: Callback) {
 }
 
 data class PullRequestState(
-        val uId: String,
-        val author: String,
-        val state: State
+        var uId: String,
+        var author: String,
+        var state: State
 )
 
 enum class State {
