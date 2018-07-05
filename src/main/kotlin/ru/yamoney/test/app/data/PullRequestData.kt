@@ -21,10 +21,25 @@ data class PullRequest(
         val createdDate: Long,
         val updatedDate: Long,
         val fromRef: FromRef,
-        val reviewers: List<String>
+        val reviewers: List<Reviewer>
 ) {
     fun uId() = "${this.fromRef.repository.name}_${this.id}"
 }
+
+data class Reviewer(
+        val user: User,
+        val role: String,
+        val approved: Boolean,
+        val status: String
+)
+
+data class User(
+        val name: String,
+        val emailAddress: String,
+        val id: Long,
+        val displayName: String,
+        val active: Boolean
+)
 
 data class FromRef(
         val repository: Repository,
