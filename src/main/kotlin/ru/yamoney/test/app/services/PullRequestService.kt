@@ -2,7 +2,10 @@ package ru.yamoney.test.app.services
 
 import org.apache.http.client.fluent.Form
 import org.apache.http.client.fluent.Request
-import org.litote.kmongo.*
+import org.litote.kmongo.deleteOne
+import org.litote.kmongo.findOne
+import org.litote.kmongo.getCollection
+import org.litote.kmongo.updateOne
 import ru.yamoney.test.app.Callback
 import ru.yamoney.test.app.data.PullRequest
 import ru.yamoney.test.app.data.WebHook
@@ -23,10 +26,10 @@ fun processWebHook(webHook: WebHook) {
 
             db.getCollection<PullRequestState>().updateOne(
                     "{uId: '${webHook.pullRequest.uId()}'}",
-                    set(PullRequestState::state, State.COMPILATION_CHECK_STARTED)
+                    "{\$set: {state: '${State.COMPILATION_CHECK_STARTED}'}}"
             )
         }
-        "pr:deleted" -> db.getCollection<PullRequestState>().deleteOne(PullRequestState::uId eq webHook.pullRequest.uId())
+        "pr:deleted" -> db.getCollection<PullRequestState>().deleteOne("{uId: '${webHook.pullRequest.uId()}'}")
         else -> println(webHook)
     }
 }
@@ -40,13 +43,13 @@ fun processCallback(callback: Callback) {
 
     db.getCollection<PullRequestState>().updateOne(
             "{uId: '${callback.uId}'}",
-            set(PullRequestState::state, State.COMPILATION_CHECK_FINISHED))
+            "{\$set: {state: '${State.COMPILATION_CHECK_FINISHED}'}}")
     if (callback.status != "SUCCESS") {
         sendMessage("Проверка пр ${pullRequest.author} на компиляцию завершилась со статусом ${callback.status}")
     }
 }
 
-class PullRequestState(
+data class PullRequestState(
         val uId: String,
         val author: String,
         val state: State
