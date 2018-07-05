@@ -6,5 +6,6 @@ class AppTest {
 
     @Test
     fun test() {
+
     }
 }
