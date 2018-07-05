@@ -39,8 +39,8 @@ fun main(args: Array<String>) {
                 processWebHook(call.receiveJson())
                 call.respond(HttpStatusCode.OK)
             }
-            get("/callback/{uId}/{status}") {
-                val uId = call.parameters["uId"] ?: throw IllegalArgumentException("unknown uId in callback")
+            get("/callback/{uid}/{status}") {
+                val uId = call.parameters["uid"] ?: throw IllegalArgumentException("unknown uid in callback")
                 val status = call.parameters["status"] ?: throw IllegalArgumentException("unknown status in callback")
                 processCallback(Callback(uId, status))
                 call.respond(CallbackResponse("success"))
@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
     }.start(wait = true)
 }
 
-data class Callback(val uId: String, val status: String)
+data class Callback(val uid: String, val status: String)
 
 data class CallbackResponse(val status: String)
 

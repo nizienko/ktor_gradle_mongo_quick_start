@@ -17,7 +17,7 @@ data class PullRequest(
         val fromRef: FromRef,
         val reviewers: List<Reviewer>
 ) {
-    fun uId() = "${this.fromRef.repository.name}_${this.id}"
+    fun uid() = "${this.fromRef.repository.name}_${this.id}"
 }
 
 data class Reviewer(

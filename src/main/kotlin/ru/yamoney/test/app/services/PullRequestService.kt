@@ -19,30 +19,30 @@ fun processWebHook(webHook: WebHook) {
             sendMessage("Новый pr от ${webHook.actor.displayName} в ${webHook.pullRequest.fromRef.repository.name}")
             db.getCollection<PullRequestState>().insertOne(
                     PullRequestState(
-                            webHook.pullRequest.uId(),
+                            webHook.pullRequest.uid(),
                             webHook.actor.displayName,
                             State.OPEN))
             startJob(webHook.pullRequest)
 
             db.getCollection<PullRequestState>().updateOne(
-                    "{uid: '${webHook.pullRequest.uId()}'}",
+                    "{uid: '${webHook.pullRequest.uid()}'}",
                     "{\$set: {state: '${State.COMPILATION_CHECK_STARTED}'}}"
             )
         }
-        "pr:deleted" -> db.getCollection<PullRequestState>().deleteOne("{uid: '${webHook.pullRequest.uId()}'}")
+        "pr:deleted" -> db.getCollection<PullRequestState>().deleteOne("{uid: '${webHook.pullRequest.uid()}'}")
         else -> println(webHook)
     }
 }
 
 fun processCallback(callback: Callback) {
     val pullRequest = db.getCollection<PullRequestState>()
-            .findOne("{uid: '${callback.uId}'}")
+            .findOne("{uid: '${callback.uid}'}")
             ?: throw IllegalStateException("Не знаем такой ПР $callback")
 
     println("$pullRequest compilation check finished with $callback")
 
     db.getCollection<PullRequestState>().updateOne(
-            "{uid: '${callback.uId}'}",
+            "{uid: '${callback.uid}'}",
             "{\$set: {state: '${State.COMPILATION_CHECK_FINISHED}'}}")
     if (callback.status != "SUCCESS") {
         sendMessage("Проверка пр ${pullRequest.author} на компиляцию завершилась со статусом ${callback.status}")
@@ -50,7 +50,7 @@ fun processCallback(callback: Callback) {
 }
 
 data class PullRequestState(
-        val uId: String,
+        val uid: String,
         val author: String,
         val state: State
 )
@@ -63,7 +63,7 @@ enum class State {
 }
 
 fun startJob(pullRequest: PullRequest) {
-    val callBackUrl = "http://ugr-integration-tools1.yamoney.ru:8098/callback/${pullRequest.uId()}"
+    val callBackUrl = "http://ugr-integration-tools1.yamoney.ru:8098/callback/${pullRequest.uid()}"
     println("Starting job for $pullRequest")
     val result = Request.Post("http://jenkins-ot.test.yamoney.ru:8096/jenkinsJob/run")
             .bodyForm(
