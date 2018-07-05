@@ -16,6 +16,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
 import receiveJson
+import ru.yamoney.test.app.services.processCallback
 import ru.yamoney.test.app.services.processWebHook
 import java.text.DateFormat
 
@@ -38,14 +39,17 @@ fun main(args: Array<String>) {
                 processWebHook(call.receiveJson())
                 call.respond(HttpStatusCode.OK)
             }
-            get("/callback/{prId}/{status}") {
-                println(call.parameters["prId"])
-                println(call.parameters["status"])
-                call.respond(CallBackResponse("success"))
+            get("/callback/{uId}/{status}") {
+                val uId = call.parameters["uId"] ?: throw IllegalArgumentException("unknown uId in callback")
+                val status = call.parameters["status"] ?: throw IllegalArgumentException("unknown status in callback")
+                processCallback(Callback(uId, status))
+                call.respond(CallbackResponse("success"))
             }
         }
     }.start(wait = true)
 }
 
-data class CallBackResponse(val status: String)
+data class Callback(val uId: String, val status: String)
+
+data class CallbackResponse(val status: String)
 
