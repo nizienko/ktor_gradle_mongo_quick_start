@@ -25,24 +25,24 @@ fun processWebHook(webHook: WebHook) {
             startJob(webHook.pullRequest)
 
             db.getCollection<PullRequestState>().updateOne(
-                    "{uId: '${webHook.pullRequest.uId()}'}",
+                    "{uid: '${webHook.pullRequest.uId()}'}",
                     "{\$set: {state: '${State.COMPILATION_CHECK_STARTED}'}}"
             )
         }
-        "pr:deleted" -> db.getCollection<PullRequestState>().deleteOne("{uId: '${webHook.pullRequest.uId()}'}")
+        "pr:deleted" -> db.getCollection<PullRequestState>().deleteOne("{uid: '${webHook.pullRequest.uId()}'}")
         else -> println(webHook)
     }
 }
 
 fun processCallback(callback: Callback) {
     val pullRequest = db.getCollection<PullRequestState>()
-            .findOne("{uId: '${callback.uId}'}")
+            .findOne("{uid: '${callback.uId}'}")
             ?: throw IllegalStateException("Не знаем такой ПР $callback")
 
     println("$pullRequest compilation check finished with $callback")
 
     db.getCollection<PullRequestState>().updateOne(
-            "{uId: '${callback.uId}'}",
+            "{uid: '${callback.uId}'}",
             "{\$set: {state: '${State.COMPILATION_CHECK_FINISHED}'}}")
     if (callback.status != "SUCCESS") {
         sendMessage("Проверка пр ${pullRequest.author} на компиляцию завершилась со статусом ${callback.status}")
